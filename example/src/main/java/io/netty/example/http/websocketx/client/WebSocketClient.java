@@ -26,6 +26,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.HttpClientCodec;
+import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
@@ -95,10 +96,17 @@ public final class WebSocketClient {
             // Connect with V13 (RFC 6455 aka HyBi-17). You can change it to V08 or V00.
             // If you change it to V00, ping is not supported and remember to change
             // HttpResponseDecoder to WebSocketHttpResponseDecoder in the pipeline.
+
+            //https://tools.ietf.org/html/rfc6455
+            //https://tools.ietf.org/html/rfc6455#section-11.6
+
+
+            HttpHeaders httpHeaders= new DefaultHttpHeaders();
+            httpHeaders.add("user-name","zhangsan");
             final WebSocketClientHandler handler =
                     new WebSocketClientHandler(
                             WebSocketClientHandshakerFactory.newHandshaker(
-                                    uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders()));
+                                    uri, WebSocketVersion.V13, null, true, httpHeaders));
 
             Bootstrap b = new Bootstrap();
             b.group(group)
@@ -119,6 +127,7 @@ public final class WebSocketClient {
              });
 
             Channel ch = b.connect(uri.getHost(), port).sync().channel();
+
             handler.handshakeFuture().sync();
 
             BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
