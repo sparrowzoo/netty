@@ -227,6 +227,7 @@ public class ReadOnlyByteBufTest {
     public void asReadOnly() {
         ByteBuf buf = buffer(1);
         ByteBuf readOnly = buf.asReadOnly();
+        readOnly.discardReadBytes();
         assertTrue(readOnly.isReadOnly());
         assertSame(readOnly, readOnly.asReadOnly());
         readOnly.release();

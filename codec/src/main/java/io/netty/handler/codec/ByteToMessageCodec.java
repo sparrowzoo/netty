@@ -44,7 +44,7 @@ public abstract class ByteToMessageCodec<I> extends ChannelDuplexHandler {
 
         @Override
         protected void decodeLast(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-            ByteToMessageCodec.this.decodeLast(ctx, in, out);
+                ByteToMessageCodec.this.decodeLast(ctx, in, out);
         }
     };
 

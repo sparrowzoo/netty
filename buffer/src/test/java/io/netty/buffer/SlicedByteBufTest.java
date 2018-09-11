@@ -21,6 +21,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -148,13 +150,18 @@ public class SlicedByteBufTest extends AbstractByteBufTest {
 
     @Test
     public void testReaderIndexAndMarks() {
-        ByteBuf wrapped = Unpooled.buffer(16);
+        ByteBuf wrapped = Unpooled.buffer(4);
         try {
-            wrapped.writerIndex(14);
-            wrapped.readerIndex(2);
-            wrapped.markWriterIndex();
-            wrapped.markReaderIndex();
+            wrapped.writeInt(100);
+            ByteBuf slice2 = wrapped.slice().retain();
+            ByteBuf duplicate = wrapped.duplicate().retain();
+
+            wrapped.readInt();
+            wrapped.discardSomeReadBytes();
+            wrapped.writeInt(200);
+
             ByteBuf slice = wrapped.slice(4, 4);
+            slice2.retain();
             assertEquals(0, slice.readerIndex());
             assertEquals(4, slice.writerIndex());
 

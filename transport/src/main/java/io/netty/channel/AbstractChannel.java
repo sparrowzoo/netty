@@ -606,6 +606,7 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
 
         @Override
         public final void close(final ChannelPromise promise) {
+            System.out.println("channel close");
             assertEventLoop();
 
             close(promise, CLOSE_CLOSED_CHANNEL_EXCEPTION, CLOSE_CLOSED_CHANNEL_EXCEPTION, false);

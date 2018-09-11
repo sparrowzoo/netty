@@ -285,6 +285,7 @@ final class PooledUnsafeDirectByteBuf extends PooledByteBuf<ByteBuffer> {
         index = idx(index);
         tmpBuf.clear().position(index).limit(index + length);
         try {
+            System.out.println(in+ "read maybe error");
             return in.read(tmpBuf);
         } catch (ClosedChannelException ignored) {
             return -1;

@@ -129,6 +129,7 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
             boolean close = false;
             try {
                 do {
+                    //@harry allocate byte buf
                     byteBuf = allocHandle.allocate(allocator);
                     allocHandle.lastBytesRead(doReadBytes(byteBuf));
                     if (allocHandle.lastBytesRead() <= 0) {
@@ -145,6 +146,7 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
 
                     allocHandle.incMessagesRead(1);
                     readPending = false;
+                    //@harry fire change read
                     pipeline.fireChannelRead(byteBuf);
                     byteBuf = null;
                 } while (allocHandle.continueReading());
@@ -153,9 +155,13 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
                 pipeline.fireChannelReadComplete();
 
                 if (close) {
+                    //@harry server close
+                    System.out.println("server close normally ,client close automatically....");
                     closeOnRead(pipeline);
                 }
             } catch (Throwable t) {
+                t.printStackTrace();
+                //@harry abstract nio byte channel
                 handleReadException(pipeline, byteBuf, t, close, allocHandle);
             } finally {
                 // Check if there is a readPending which was not processed yet.

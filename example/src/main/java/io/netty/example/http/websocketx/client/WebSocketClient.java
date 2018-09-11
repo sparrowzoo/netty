@@ -142,7 +142,8 @@ public final class WebSocketClient {
                 } else if ("ping".equals(msg.toLowerCase())) {
                     WebSocketFrame frame = new PingWebSocketFrame(Unpooled.wrappedBuffer(new byte[] { 8, 1, 8, 1 }));
                     ch.writeAndFlush(frame);
-                } else {
+                }
+                else {
                     WebSocketFrame frame = new TextWebSocketFrame(msg);
                     ch.writeAndFlush(frame);
                 }

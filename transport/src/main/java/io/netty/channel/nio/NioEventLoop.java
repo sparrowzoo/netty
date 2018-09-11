@@ -568,6 +568,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
     }
 
     private void processSelectedKeysOptimized() {
+        //System.out.println("process selected keys optimized select keys size "+selectedKeys.size);
         for (int i = 0; i < selectedKeys.size; ++i) {
             final SelectionKey k = selectedKeys.keys[i];
             // null out entry in the array to allow to have it GC'ed once the Channel close
@@ -642,9 +643,12 @@ public final class NioEventLoop extends SingleThreadEventLoop {
             // Also check for readOps of 0 to workaround possible JDK bug which may otherwise lead
             // to a spin loop
             if ((readyOps & (SelectionKey.OP_READ | SelectionKey.OP_ACCEPT)) != 0 || readyOps == 0) {
+                //@harry nio event loop start read
+                logger.info("process selected key unsafe read ...");
                 unsafe.read();
             }
         } catch (CancelledKeyException ignored) {
+            ignored.printStackTrace();
             unsafe.close(unsafe.voidPromise());
         }
     }
