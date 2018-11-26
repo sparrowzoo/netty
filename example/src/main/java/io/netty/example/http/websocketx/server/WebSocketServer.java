@@ -51,6 +51,12 @@ public final class WebSocketServer {
     static final int PORT = Integer.parseInt(System.getProperty("port", SSL? "8443" : "8080"));
 
     public static void main(String[] args) throws Exception {
+        /**
+         * @see io.netty.channel.nio.NioEventLoopGroup
+         * @see java.nio.channels.spi.SelectorProvider
+         * for linux
+         */
+        System.setProperty("java.nio.channels.spi.SelectorProvider","sun.nio.ch.PollSelectorProvider");
         // Configure SSL.
         final SslContext sslCtx;
         if (SSL) {

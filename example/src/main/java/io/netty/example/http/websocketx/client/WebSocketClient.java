@@ -130,9 +130,9 @@ public final class WebSocketClient {
 
             handler.handshakeFuture().sync();
 
-            BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
+            //BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
             while (true) {
-                String msg = console.readLine();
+                String msg = "hello";//console.readLine();
                 if (msg == null) {
                     break;
                 } else if ("bye".equals(msg.toLowerCase())) {
@@ -144,6 +144,7 @@ public final class WebSocketClient {
                     ch.writeAndFlush(frame);
                 }
                 else {
+                    Thread.sleep(1000);
                     WebSocketFrame frame = new TextWebSocketFrame(msg);
                     ch.writeAndFlush(frame);
                 }

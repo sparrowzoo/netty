@@ -168,6 +168,10 @@ static jint netty_epoll_native_epollCreate(JNIEnv* env, jclass clazz) {
     return efd;
 }
 
+/**
+*java api declare
+*private static native int epollWait0(int efd, long address, int len, int timerFd, int timeoutSec, int timeoutNs);
+**/
 static jint netty_epoll_native_epollWait0(JNIEnv* env, jclass clazz, jint efd, jlong address, jint len, jint timerFd, jint tvSec, jint tvNsec) {
     struct epoll_event *ev = (struct epoll_event*) (intptr_t) address;
     int result, err;

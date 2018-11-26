@@ -53,17 +53,20 @@ final class SelectedSelectionKeySetSelector extends Selector {
     @Override
     public int selectNow() throws IOException {
         selectionKeys.reset();
+        System.err.println(delegate+".selectNow");
         return delegate.selectNow();
     }
 
     @Override
     public int select(long timeout) throws IOException {
+        System.err.println("netty select timeout "+timeout+"current time "+System.currentTimeMillis());
         selectionKeys.reset();
         return delegate.select(timeout);
     }
 
     @Override
     public int select() throws IOException {
+        System.err.println("netty select ");
         selectionKeys.reset();
         return delegate.select();
     }

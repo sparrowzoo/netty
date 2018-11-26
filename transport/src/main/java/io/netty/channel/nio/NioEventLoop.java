@@ -65,9 +65,11 @@ public final class NioEventLoop extends SingleThreadEventLoop {
     private static final int MIN_PREMATURE_SELECTOR_RETURNS = 3;
     private static final int SELECTOR_AUTO_REBUILD_THRESHOLD;
 
+
     private final IntSupplier selectNowSupplier = new IntSupplier() {
         @Override
         public int get() throws Exception {
+            System.err.println("selectNow() to int... ");
             return selectNow();
         }
     };
@@ -168,6 +170,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
     }
 
     private SelectorTuple openSelector() {
+        System.err.println("netty open selector");
         final Selector unwrappedSelector;
         try {
             unwrappedSelector = provider.openSelector();
@@ -459,7 +462,10 @@ public final class NioEventLoop extends SingleThreadEventLoop {
                         processSelectedKeys();
                     } finally {
                         // Ensure we always run tasks.
+
+                        //process selected keys is io time
                         final long ioTime = System.nanoTime() - ioStartTime;
+                        System.err.println("io consume time "+ioTime);
                         runAllTasks(ioTime * (100 - ioRatio) / ioRatio);
                     }
                 }
@@ -719,6 +725,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
 
     int selectNow() throws IOException {
         try {
+            System.err.println(selector+".selectNow");
             return selector.selectNow();
         } finally {
             // restore wakeup state if needed

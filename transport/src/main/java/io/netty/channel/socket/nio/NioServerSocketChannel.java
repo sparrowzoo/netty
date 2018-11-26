@@ -70,6 +70,7 @@ public class NioServerSocketChannel extends AbstractNioMessageChannel
      */
     public NioServerSocketChannel() {
         this(newSocket(DEFAULT_SELECTOR_PROVIDER));
+        System.err.println("create new socket");
     }
 
     /**
