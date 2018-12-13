@@ -98,7 +98,7 @@ public final class WebSocketClient {
             // HttpResponseDecoder to WebSocketHttpResponseDecoder in the pipeline.
 
             //https://tools.ietf.org/html/rfc6455
-            //https://tools.ietf.org/html/rfc6455#section-11.6
+            //https://tools.ietf.org/html/rfc6455#section-11.6  各版本说明
 
 
             HttpHeaders httpHeaders= new DefaultHttpHeaders();
