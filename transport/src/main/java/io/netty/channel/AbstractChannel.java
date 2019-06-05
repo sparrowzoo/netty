@@ -470,11 +470,13 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
                 return;
             }
 
+            System.out.println("abstract channel event loop init");
             AbstractChannel.this.eventLoop = eventLoop;
 
             if (eventLoop.inEventLoop()) {
                 register0(promise);
             } else {
+                System.err.println("event loop execute init selector");
                 try {
                     eventLoop.execute(new Runnable() {
                         @Override

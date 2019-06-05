@@ -56,7 +56,7 @@ public final class WebSocketServer {
          * @see java.nio.channels.spi.SelectorProvider
          * for linux
          */
-        System.setProperty("java.nio.channels.spi.SelectorProvider","sun.nio.ch.PollSelectorProvider");
+        //System.setProperty("java.nio.channels.spi.SelectorProvider","sun.nio.ch.PollSelectorProvider");
         // Configure SSL.
         final SslContext sslCtx;
         if (SSL) {
@@ -67,6 +67,7 @@ public final class WebSocketServer {
         }
 
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+        System.out.println("boss group address ");
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
             ServerBootstrap b = new ServerBootstrap();

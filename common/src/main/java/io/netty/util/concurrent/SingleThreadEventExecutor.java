@@ -875,6 +875,7 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
         executor.execute(new Runnable() {
             @Override
             public void run() {
+                System.err.println("execute first thread "+Thread.currentThread());
                 thread = Thread.currentThread();
                 if (interrupted) {
                     thread.interrupt();

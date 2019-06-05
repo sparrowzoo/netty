@@ -81,6 +81,7 @@ public abstract class MultithreadEventExecutorGroup extends AbstractEventExecuto
         for (int i = 0; i < nThreads; i ++) {
             boolean success = false;
             try {
+                //Default EventLoop -->SingleThreadEventExecutor
                 children[i] = newChild(executor, args);
                 success = true;
             } catch (Exception e) {

@@ -403,6 +403,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
 
     @Override
     protected void run() {
+        System.err.println("nio event loop run==================================================");
         for (;;) {
             try {
                 switch (selectStrategy.calculateStrategy(selectNowSupplier, hasTasks())) {
@@ -737,6 +738,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
 
     private void select(boolean oldWakenUp) throws IOException {
         Selector selector = this.selector;
+        System.err.println("selector "+selector);
         try {
             int selectCnt = 0;
             long currentTimeNanos = System.nanoTime();

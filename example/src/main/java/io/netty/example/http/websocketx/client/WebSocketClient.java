@@ -17,10 +17,7 @@ package io.netty.example.http.websocketx.client;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -122,7 +119,12 @@ public final class WebSocketClient {
                              new HttpClientCodec(),
                              new HttpObjectAggregator(8192),
                              WebSocketClientCompressionHandler.INSTANCE,
-                             handler);
+                             handler, new SimpleChannelInboundHandler<String>() {
+                                 @Override
+                                 protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+                                     System.out.printf(msg);
+                                 }
+                             });
                  }
              });
 
@@ -144,7 +146,7 @@ public final class WebSocketClient {
                     ch.writeAndFlush(frame);
                 }
                 else {
-                    Thread.sleep(1000);
+                   //Thread.sleep(1000);
                     WebSocketFrame frame = new TextWebSocketFrame(msg);
                     ch.writeAndFlush(frame);
                 }

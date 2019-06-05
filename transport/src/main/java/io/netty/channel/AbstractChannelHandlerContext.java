@@ -376,6 +376,7 @@ abstract class AbstractChannelHandlerContext extends DefaultAttributeMap
 
     static void invokeChannelReadComplete(final AbstractChannelHandlerContext next) {
         EventExecutor executor = next.executor();
+        System.err.println("nio event loop address "+executor);
         if (executor.inEventLoop()) {
             next.invokeChannelReadComplete();
         } else {
