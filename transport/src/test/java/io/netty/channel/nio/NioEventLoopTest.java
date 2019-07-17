@@ -17,6 +17,7 @@ package io.netty.channel.nio;
 
 import io.netty.channel.AbstractEventLoopTest;
 import io.netty.channel.Channel;
+import io.netty.channel.EventLoop;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.socket.ServerSocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -40,8 +41,26 @@ public class NioEventLoopTest extends AbstractEventLoopTest {
 
     @Test
     public void testRebuildSelector() throws Exception {
-        EventLoopGroup group = new NioEventLoopGroup(1);
+        EventLoopGroup group = new NioEventLoopGroup(100);
         final NioEventLoop loop = (NioEventLoop) group.next();
+
+        group.submit(new Runnable() {
+            @Override
+            public void run() {
+                System.out.printf("2222");
+            }
+        });
+
+
+        EventLoopGroup nextLoopGroup= loop.next();
+        nextLoopGroup.submit(new Runnable() {
+            @Override
+            public void run() {
+                System.out.printf("1");
+            }
+        });
+
+
         try {
             Channel channel = new NioServerSocketChannel();
             loop.register(channel).syncUninterruptibly();
