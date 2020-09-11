@@ -123,6 +123,7 @@ public class Bootstrap extends AbstractBootstrap<Bootstrap, Channel> {
      * Connect a {@link Channel} to the remote peer.
      */
     public ChannelFuture connect(String inetHost, int inetPort) {
+        logger.debug("channel connect to host:{} port:{}",inetHost,inetPort);
         return connect(InetSocketAddress.createUnresolved(inetHost, inetPort));
     }
 

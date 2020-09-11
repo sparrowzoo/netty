@@ -19,6 +19,10 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
+
+import java.nio.charset.Charset;
 
 /**
  * Handler implementation for the echo client.  It initiates the ping-pong
@@ -29,14 +33,14 @@ public class EchoClientHandler extends ChannelInboundHandlerAdapter {
 
     private final ByteBuf firstMessage;
 
+    private final String HELL_WORLD = "hello";
+
     /**
      * Creates a client-side handler.
      */
     public EchoClientHandler() {
-        firstMessage = Unpooled.buffer(EchoClient.SIZE);
-        for (int i = 0; i < firstMessage.capacity(); i ++) {
-            firstMessage.writeByte((byte) i);
-        }
+        firstMessage = Unpooled.directBuffer();
+        firstMessage.writeCharSequence(HELL_WORLD, Charset.defaultCharset());
     }
 
     @Override
@@ -46,12 +50,24 @@ public class EchoClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        ctx.write(msg);
+        ByteBuf byteBuf = (ByteBuf) msg;
+        CharSequence world = byteBuf.getCharSequence(0, HELL_WORLD.length(), Charset.defaultCharset());
+        if (world.equals("world")) {
+            return;
+        }
+        String hello = "world";
+        System.err.println("before write thread "+Thread.currentThread().getName());
+        ctx.write(msg).addListener(new GenericFutureListener<Future<? super Object>>() {
+            @Override
+            public void operationComplete(Future<? super Object> future) throws Exception {
+                System.out.println(future.getNow());
+            }
+        });
     }
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) {
-       ctx.flush();
+        ctx.flush();
     }
 
     @Override

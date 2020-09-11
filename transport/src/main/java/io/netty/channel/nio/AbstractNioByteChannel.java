@@ -17,19 +17,13 @@ package io.netty.channel.nio;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelConfig;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelMetadata;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.ChannelOutboundBuffer;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.FileRegion;
-import io.netty.channel.RecvByteBufAllocator;
+import io.netty.channel.*;
 import io.netty.channel.internal.ChannelUtils;
 import io.netty.channel.socket.ChannelInputShutdownEvent;
 import io.netty.channel.socket.ChannelInputShutdownReadComplete;
 import io.netty.util.internal.StringUtil;
+import io.netty.util.internal.logging.InternalLogger;
+import io.netty.util.internal.logging.InternalLoggerFactory;
 
 import java.io.IOException;
 import java.nio.channels.SelectableChannel;
@@ -45,6 +39,7 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
     private static final String EXPECTED_TYPES =
             " (expected: " + StringUtil.simpleClassName(ByteBuf.class) + ", " +
             StringUtil.simpleClassName(FileRegion.class) + ')';
+    private static final InternalLogger logger = InternalLoggerFactory.getInstance(AbstractNioByteChannel.class);
 
     private final Runnable flushTask = new Runnable() {
         @Override
@@ -119,7 +114,7 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
 
         @Override
         public final void read() {
-            System.out.println("unsafe read content");
+            logger.debug("unsafe read content");
             final ChannelConfig config = config();
             final ChannelPipeline pipeline = pipeline();
             final ByteBufAllocator allocator = config.getAllocator();
@@ -148,7 +143,7 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
                     allocHandle.incMessagesRead(1);
                     readPending = false;
                     //@harry fire change read
-                    System.out.println("pipeline fire channel read");
+                    logger.debug("pipeline fire channel read");
                     pipeline.fireChannelRead(byteBuf);
                     byteBuf = null;
                 } while (allocHandle.continueReading());
@@ -158,7 +153,7 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
 
                 if (close) {
                     //@harry server close
-                    System.out.println("server close normally ,client close automatically....");
+                    logger.debug("server close normally ,client close automatically....");
                     closeOnRead(pipeline);
                 }
             } catch (Throwable t) {

@@ -16,6 +16,8 @@
 package io.netty.util.concurrent;
 
 import io.netty.util.internal.UnstableApi;
+import io.netty.util.internal.logging.InternalLogger;
+import io.netty.util.internal.logging.InternalLoggerFactory;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -24,10 +26,14 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @UnstableApi
 public final class DefaultEventExecutorChooserFactory implements EventExecutorChooserFactory {
+    private static final InternalLogger logger = InternalLoggerFactory.getInstance(DefaultEventExecutorChooserFactory.class);
+
 
     public static final DefaultEventExecutorChooserFactory INSTANCE = new DefaultEventExecutorChooserFactory();
 
-    private DefaultEventExecutorChooserFactory() { }
+    private DefaultEventExecutorChooserFactory() {
+        logger.debug("init default event executor chooser factory");
+    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -53,6 +59,7 @@ public final class DefaultEventExecutorChooserFactory implements EventExecutorCh
 
         @Override
         public EventExecutor next() {
+
             return executors[idx.getAndIncrement() & executors.length - 1];
         }
     }

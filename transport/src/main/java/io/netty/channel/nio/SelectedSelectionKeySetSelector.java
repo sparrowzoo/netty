@@ -15,6 +15,9 @@
  */
 package io.netty.channel.nio;
 
+import io.netty.util.internal.logging.InternalLogger;
+import io.netty.util.internal.logging.InternalLoggerFactory;
+
 import java.io.IOException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -22,6 +25,8 @@ import java.nio.channels.spi.SelectorProvider;
 import java.util.Set;
 
 final class SelectedSelectionKeySetSelector extends Selector {
+    private static final InternalLogger logger = InternalLoggerFactory.getInstance(SelectedSelectionKeySetSelector.class);
+
     private final SelectedSelectionKeySet selectionKeys;
     private final Selector delegate;
 
@@ -59,14 +64,14 @@ final class SelectedSelectionKeySetSelector extends Selector {
 
     @Override
     public int select(long timeout) throws IOException {
-        System.err.println("netty select timeout "+timeout+"current time "+System.currentTimeMillis());
+        //logger.debug("netty select timeout {} current time is {}",timeout,System.currentTimeMillis());
         selectionKeys.reset();
         return delegate.select(timeout);
     }
 
     @Override
     public int select() throws IOException {
-        System.err.println("netty select ");
+        logger.debug("netty select delegate {}",delegate.getClass().getName());
         selectionKeys.reset();
         return delegate.select();
     }

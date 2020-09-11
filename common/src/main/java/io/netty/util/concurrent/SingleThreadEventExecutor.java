@@ -871,11 +871,11 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
     }
 
     private void doStartThread() {
+        logger.debug("execute SELECT thread thread-id{},thread-name {}",Thread.currentThread().getId(),Thread.currentThread().getName());
         assert thread == null;
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                System.err.println("execute first thread "+Thread.currentThread());
                 thread = Thread.currentThread();
                 if (interrupted) {
                     thread.interrupt();

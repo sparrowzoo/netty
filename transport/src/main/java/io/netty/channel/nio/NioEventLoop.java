@@ -170,14 +170,13 @@ public final class NioEventLoop extends SingleThreadEventLoop {
     }
 
     private SelectorTuple openSelector() {
-        System.err.println("netty open selector");
         final Selector unwrappedSelector;
         try {
             unwrappedSelector = provider.openSelector();
         } catch (IOException e) {
             throw new ChannelException("failed to open a new selector", e);
         }
-
+        logger.debug("netty open selector {}",unwrappedSelector.getClass().getName());
         if (DISABLE_KEYSET_OPTIMIZATION) {
             return new SelectorTuple(unwrappedSelector);
         }
@@ -403,7 +402,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
 
     @Override
     protected void run() {
-        System.err.println("nio event loop run==================================================");
+        logger.debug("nio event loop run thread {}",Thread.currentThread().getName());
         for (;;) {
             try {
                 switch (selectStrategy.calculateStrategy(selectNowSupplier, hasTasks())) {
@@ -466,7 +465,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
 
                         //process selected keys is io time
                         final long ioTime = System.nanoTime() - ioStartTime;
-                        System.err.println("io consume time "+ioTime);
+                        //logger.debug("io consume time "+ioTime);
                         runAllTasks(ioTime * (100 - ioRatio) / ioRatio);
                     }
                 }
@@ -726,7 +725,6 @@ public final class NioEventLoop extends SingleThreadEventLoop {
 
     int selectNow() throws IOException {
         try {
-            System.err.println(selector+".selectNow");
             return selector.selectNow();
         } finally {
             // restore wakeup state if needed
@@ -738,7 +736,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
 
     private void select(boolean oldWakenUp) throws IOException {
         Selector selector = this.selector;
-        System.err.println("selector "+selector);
+        logger.debug("selector {}",selector.getClass().getName());
         try {
             int selectCnt = 0;
             long currentTimeNanos = System.nanoTime();
