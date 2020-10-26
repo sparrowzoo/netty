@@ -58,7 +58,7 @@ final class SelectedSelectionKeySetSelector extends Selector {
     @Override
     public int selectNow() throws IOException {
         selectionKeys.reset();
-        System.err.println(delegate+".selectNow");
+        logger.debug("SelectedSelectionKeySetSelector.selectNow()");
         return delegate.selectNow();
     }
 

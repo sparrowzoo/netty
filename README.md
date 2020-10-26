@@ -1,3 +1,9 @@
+build
+---
+```aidl
+$ mvn clean install -Dmaven.test.skip -Dcheckstyle.skip=true -Dforbiddenapis.skip=true
+
+```
 # Netty Project
 
 Netty is an asynchronous event-driven network application framework for rapid development of maintainable high performance protocol servers & clients.

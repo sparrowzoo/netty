@@ -59,8 +59,9 @@ public final class DefaultEventExecutorChooserFactory implements EventExecutorCh
 
         @Override
         public EventExecutor next() {
-
-            return executors[idx.getAndIncrement() & executors.length - 1];
+            int index=idx.getAndIncrement() & executors.length - 1;
+            logger.info("牛B算法！！！length{},index {}", executors.length,index);
+            return executors[index];
         }
     }
 

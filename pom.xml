@@ -1064,11 +1064,11 @@
         <artifactId>maven-remote-resources-plugin</artifactId>
         <version>1.5</version>
       </plugin>
-      <plugin>
-        <groupId>de.thetaphi</groupId>
-        <artifactId>forbiddenapis</artifactId>
-        <version>2.2</version>
-      </plugin>
+      <!--<plugin>-->
+        <!--<groupId>de.thetaphi</groupId>-->
+        <!--<artifactId>forbiddenapis</artifactId>-->
+        <!--<version>2.2</version>-->
+      <!--</plugin>-->
     </plugins>
 
     <pluginManagement>
@@ -1296,62 +1296,62 @@
             </execution>
           </executions>
         </plugin>
-        <plugin>
-          <groupId>de.thetaphi</groupId>
-          <artifactId>forbiddenapis</artifactId>
-          <version>2.2</version>
-          <executions>
-            <execution>
-              <id>check-forbidden-apis</id>
-              <configuration>
-                <targetVersion>${maven.compiler.target}</targetVersion>
-                <!-- allow undocumented classes like sun.misc.Unsafe: -->
-                <internalRuntimeForbidden>false</internalRuntimeForbidden>
-                <!-- if the used Java version is too new, don't fail, just do nothing: -->
-                <failOnUnsupportedJava>false</failOnUnsupportedJava>
-                <bundledSignatures>
-                  <!-- This will automatically choose the right signatures based on 'targetVersion': -->
-                  <!-- enabling these should be done in the future -->
-                  <!-- bundledSignature>jdk-unsafe</bundledSignature -->
-                  <!-- bundledSignature>jdk-deprecated</bundledSignature -->
-                  <!-- bundledSignature>jdk-system-out</bundledSignature -->
-                </bundledSignatures>
-                <signaturesFiles>
-                  <signaturesFile>${netty.dev.tools.directory}/forbidden/signatures.txt</signaturesFile>
-                </signaturesFiles>
-                <suppressAnnotations><annotation>**.SuppressForbidden</annotation></suppressAnnotations>
-              </configuration>
-              <phase>compile</phase>
-              <goals>
-                <goal>check</goal>
-              </goals>
-            </execution>
-            <execution>
-              <id>check-forbidden-test-apis</id>
-              <configuration>
-                <targetVersion>${maven.compiler.target}</targetVersion>
-                <!-- allow undocumented classes like sun.misc.Unsafe: -->
-                <internalRuntimeForbidden>true</internalRuntimeForbidden>
-                <!-- if the used Java version is too new, don't fail, just do nothing: -->
-                <failOnUnsupportedJava>false</failOnUnsupportedJava>
-                <bundledSignatures>
-                  <!-- This will automatically choose the right signatures based on 'targetVersion': -->
-                  <!-- enabling these should be done in the future -->
-                  <!-- bundledSignature>jdk-unsafe</bundledSignature -->
-                  <!-- bundledSignature>jdk-deprecated</bundledSignature -->
-                </bundledSignatures>
-                <signaturesFiles>
-                  <signaturesFile>${netty.dev.tools.directory}/forbidden/signatures.txt</signaturesFile>
-                </signaturesFiles>
-                <suppressAnnotations><annotation>**.SuppressForbidden</annotation></suppressAnnotations>
-              </configuration>
-              <phase>test-compile</phase>
-              <goals>
-                <goal>testCheck</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
+        <!--<plugin>-->
+          <!--<groupId>de.thetaphi</groupId>-->
+          <!--<artifactId>forbiddenapis</artifactId>-->
+          <!--<version>2.2</version>-->
+          <!--<executions>-->
+            <!--<execution>-->
+              <!--<id>check-forbidden-apis</id>-->
+              <!--<configuration>-->
+                <!--<targetVersion>${maven.compiler.target}</targetVersion>-->
+                <!--&lt;!&ndash; allow undocumented classes like sun.misc.Unsafe: &ndash;&gt;-->
+                <!--<internalRuntimeForbidden>false</internalRuntimeForbidden>-->
+                <!--&lt;!&ndash; if the used Java version is too new, don't fail, just do nothing: &ndash;&gt;-->
+                <!--<failOnUnsupportedJava>false</failOnUnsupportedJava>-->
+                <!--<bundledSignatures>-->
+                  <!--&lt;!&ndash; This will automatically choose the right signatures based on 'targetVersion': &ndash;&gt;-->
+                  <!--&lt;!&ndash; enabling these should be done in the future &ndash;&gt;-->
+                  <!--&lt;!&ndash; bundledSignature>jdk-unsafe</bundledSignature &ndash;&gt;-->
+                  <!--&lt;!&ndash; bundledSignature>jdk-deprecated</bundledSignature &ndash;&gt;-->
+                  <!--&lt;!&ndash; bundledSignature>jdk-system-out</bundledSignature &ndash;&gt;-->
+                <!--</bundledSignatures>-->
+                <!--<signaturesFiles>-->
+                  <!--<signaturesFile>${netty.dev.tools.directory}/forbidden/signatures.txt</signaturesFile>-->
+                <!--</signaturesFiles>-->
+                <!--<suppressAnnotations><annotation>**.SuppressForbidden</annotation></suppressAnnotations>-->
+              <!--</configuration>-->
+              <!--<phase>compile</phase>-->
+              <!--<goals>-->
+                <!--<goal>check</goal>-->
+              <!--</goals>-->
+            <!--</execution>-->
+            <!--<execution>-->
+              <!--<id>check-forbidden-test-apis</id>-->
+              <!--<configuration>-->
+                <!--<targetVersion>${maven.compiler.target}</targetVersion>-->
+                <!--&lt;!&ndash; allow undocumented classes like sun.misc.Unsafe: &ndash;&gt;-->
+                <!--<internalRuntimeForbidden>true</internalRuntimeForbidden>-->
+                <!--&lt;!&ndash; if the used Java version is too new, don't fail, just do nothing: &ndash;&gt;-->
+                <!--<failOnUnsupportedJava>false</failOnUnsupportedJava>-->
+                <!--<bundledSignatures>-->
+                  <!--&lt;!&ndash; This will automatically choose the right signatures based on 'targetVersion': &ndash;&gt;-->
+                  <!--&lt;!&ndash; enabling these should be done in the future &ndash;&gt;-->
+                  <!--&lt;!&ndash; bundledSignature>jdk-unsafe</bundledSignature &ndash;&gt;-->
+                  <!--&lt;!&ndash; bundledSignature>jdk-deprecated</bundledSignature &ndash;&gt;-->
+                <!--</bundledSignatures>-->
+                <!--<signaturesFiles>-->
+                  <!--<signaturesFile>${netty.dev.tools.directory}/forbidden/signatures.txt</signaturesFile>-->
+                <!--</signaturesFiles>-->
+                <!--<suppressAnnotations><annotation>**.SuppressForbidden</annotation></suppressAnnotations>-->
+              <!--</configuration>-->
+              <!--<phase>test-compile</phase>-->
+              <!--<goals>-->
+                <!--<goal>testCheck</goal>-->
+              <!--</goals>-->
+            <!--</execution>-->
+          <!--</executions>-->
+        <!--</plugin>-->
       </plugins>
     </pluginManagement>
   </build>

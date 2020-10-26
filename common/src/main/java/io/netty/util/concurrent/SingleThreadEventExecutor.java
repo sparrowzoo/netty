@@ -871,7 +871,7 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
     }
 
     private void doStartThread() {
-        logger.debug("execute SELECT thread thread-id{},thread-name {}",Thread.currentThread().getId(),Thread.currentThread().getName());
+        logger.debug("selector thread start !!!! SELECT thread thread-id{},thread-name {}",Thread.currentThread().getId(),Thread.currentThread().getName());
         assert thread == null;
         executor.execute(new Runnable() {
             @Override
