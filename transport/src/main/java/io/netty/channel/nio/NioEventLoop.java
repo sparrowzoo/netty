@@ -68,7 +68,6 @@ public final class NioEventLoop extends SingleThreadEventLoop {
     private final IntSupplier selectNowSupplier = new IntSupplier() {
         @Override
         public int get() throws Exception {
-            System.err.println("selectNow() to int... ");
             return selectNow();
         }
     };
