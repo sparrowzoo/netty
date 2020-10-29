@@ -737,7 +737,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
 
     private void select(boolean oldWakenUp) throws IOException {
         Selector selector = this.selector;
-        logger.info("NioEventLoop.select(boolean oldWakenUp) thread-name {}  selector.isOpen() {}",Thread.currentThread().getName(),selector.isOpen());
+        //logger.info("NioEventLoop.select(boolean oldWakenUp) thread-name {}  selector.isOpen() {}",Thread.currentThread().getName(),selector.isOpen());
 
         if(selector.keys()!=null) {
             Iterator<SelectionKey> it = selector.keys().iterator();

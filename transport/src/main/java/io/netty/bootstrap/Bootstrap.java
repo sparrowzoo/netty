@@ -154,6 +154,7 @@ public class Bootstrap extends AbstractBootstrap<Bootstrap, Channel> {
             throw new NullPointerException("remoteAddress");
         }
         validate();
+
         return doResolveAndConnect(remoteAddress, localAddress);
     }
 
@@ -163,6 +164,8 @@ public class Bootstrap extends AbstractBootstrap<Bootstrap, Channel> {
     private ChannelFuture doResolveAndConnect(final SocketAddress remoteAddress, final SocketAddress localAddress) {
         final ChannelFuture regFuture = initAndRegister();
         final Channel channel = regFuture.channel();
+
+        logger.info("build connection remoteAddress{},localAddress{}###############################################",remoteAddress,localAddress);
 
         if (regFuture.isDone()) {
             if (!regFuture.isSuccess()) {
