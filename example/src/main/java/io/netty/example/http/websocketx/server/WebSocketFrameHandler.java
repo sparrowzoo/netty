@@ -15,12 +15,15 @@
  */
 package io.netty.example.http.websocketx.server;
 
-import java.util.Locale;
-
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.ContinuationWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
+import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,21 +32,38 @@ import org.slf4j.LoggerFactory;
  */
 public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
 
-    private static final Logger logger = LoggerFactory.getLogger(WebSocketFrameHandler.class);
+  private static final Logger logger = LoggerFactory.getLogger(WebSocketFrameHandler.class);
 
-    @Override
-    protected void channelRead0(ChannelHandlerContext ctx, WebSocketFrame frame) throws Exception {
-        // ping and pong frames already handled
+  @Override
+  protected void channelRead0(ChannelHandlerContext ctx, WebSocketFrame frame) throws Exception {
+    // ping and pong frames already handled
 
-        if (frame instanceof TextWebSocketFrame) {
-            // Send the uppercase string back.
-            String request = ((TextWebSocketFrame) frame).text();
-            System.out.println("received "+request);
-            logger.info("{} received {}", ctx.channel(), request);
-            ctx.channel().writeAndFlush(new TextWebSocketFrame(request.toUpperCase(Locale.US)));
-        } else {
-            String message = "unsupported frame type: " + frame.getClass().getName();
-            throw new UnsupportedOperationException(message);
-        }
+    if (frame instanceof TextWebSocketFrame) {
+      // Send the uppercase string back.
+      String request = ((TextWebSocketFrame) frame).text();
+      System.out.println(request.length());
+      System.out.println("received " + request);
+      logger.info("{} received {}", ctx.channel(), request);
+      ctx.channel().writeAndFlush(new TextWebSocketFrame(request.toUpperCase(Locale.US)));
+    } else if (frame instanceof BinaryWebSocketFrame) {
+
+      System.out.println("服务器接收到⼆进制消息.");
+      BinaryWebSocketFrame msg = (BinaryWebSocketFrame) frame;
+      ByteBuf content = msg.content();
+      content.markReaderIndex();
+      int flag = content.readInt();
+      System.out.println(
+          "IsFinal" + msg.isFinalFragment() + "Image Flag:" + flag + " length" + msg.content()
+              .capacity());
+      content.resetReaderIndex();
+      ByteBuf byteBuf = Unpooled.directBuffer(msg.content().capacity());
+      byteBuf.writeBytes(msg.content());
+      ctx.writeAndFlush(new BinaryWebSocketFrame(byteBuf));
+    } else if (frame instanceof ContinuationWebSocketFrame) {
+      ContinuationWebSocketFrame msg = (ContinuationWebSocketFrame) frame;
+      System.out.println(
+          "IsFinal" + msg.isFinalFragment() + " length" + msg.content()
+              .capacity());
     }
+  }
 }
