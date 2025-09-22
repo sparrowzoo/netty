@@ -1,8 +1,17 @@
 build
 ---
-```aidl
-$ mvn clean install -Dmaven.test.skip -Dcheckstyle.skip=true -Dforbiddenapis.skip=true
+指定-Dos.detected.classifier=osx-x86_64
+```
+mvn clean install -Dos.detected.classifier=osx-x86_64 -Dmaven.test.skip -Dcheckstyle.skip=true -Dforbiddenapis.skip=true -Denforcer.skip=true
+```
+修改maven-compiler-plugin
+```
+JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_144.jdk/Contents/Home
+export JAVA_HOME
+export PATH=$JAVA_HOME/bin:$PATH
 
+<maven.compiler.source>1.8</maven.compiler.source>
+<maven.compiler.target>1.8</maven.compiler.target>
 ```
 # Netty Project
 

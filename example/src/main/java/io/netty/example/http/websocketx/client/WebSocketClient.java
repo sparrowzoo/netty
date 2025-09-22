@@ -89,7 +89,7 @@ public final class WebSocketClient {
         } else {
             sslCtx = null;
         }
-        EventLoopGroup  workder = new NioEventLoopGroup(2, new DefaultThreadFactory("websocket-workder", true));
+        EventLoopGroup workder = new NioEventLoopGroup(2, new DefaultThreadFactory("websocket-workder", true));
         try {
             // Connect with V13 (RFC 6455 aka HyBi-17). You can change it to V08 or V00.
             // If you change it to V00, ping is not supported and remember to change

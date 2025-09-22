@@ -25,39 +25,38 @@ import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketSe
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.timeout.IdleStateHandler;
 
-/**
- */
 public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel> {
 
-  private static final String WEBSOCKET_PATH = "/websocket";
+    private static final String WEBSOCKET_PATH = "/websocket";
 
-  private final SslContext sslCtx;
+    private final SslContext sslCtx;
 
-  public WebSocketServerInitializer(SslContext sslCtx) {
-    this.sslCtx = sslCtx;
-  }
-
-  @Override
-  public void initChannel(SocketChannel ch) throws Exception {
-    ChannelPipeline pipeline = ch.pipeline();
-    if (sslCtx != null) {
-      pipeline.addLast(sslCtx.newHandler(ch.alloc()));
+    public WebSocketServerInitializer(SslContext sslCtx) {
+        this.sslCtx = sslCtx;
     }
-    pipeline.addLast(new HttpServerCodec());
-    //OR
-    //pipeline.addLast("decoder", new HttpRequestDecoder())
-    //pipeline.addLast("encoder", new HttpResponseEncoder())
 
+    @Override
+    public void initChannel(SocketChannel ch) throws Exception {
+        ChannelPipeline pipeline = ch.pipeline();
+        if (sslCtx != null) {
+            pipeline.addLast(sslCtx.newHandler(ch.alloc()));
+        }
+        pipeline.addLast(new HttpServerCodec());
+        //OR
+        //pipeline.addLast("decoder", new HttpRequestDecoder())
+        //pipeline.addLast("encoder", new HttpResponseEncoder())
 
-    // ChunkedWriteHandler：向客户端发送大文件 如 html5文件
-    //pipeline.addLast("http-chunked", new ChunkedWriteHandler());
-    pipeline.addLast(new WebSocketServerCompressionHandler());
-    pipeline.addLast(new HttpObjectAggregator(1024));
-    pipeline.addLast(new WebSocketFrameAggregator(65536 * 10));
-    // 升级http到websocket握手 处理ping、pong、close
-    pipeline.addLast(new WebSocketServerProtocolSupportHandshake(WEBSOCKET_PATH, 65536 * 10));
-    pipeline.addLast(new IdleStateHandler(10, 10, 10));
-    pipeline.addLast(new WebSocketFrameHandler());
-  }
+        // ChunkedWriteHandler：向客户端发送大文件 如 html5文件
+        //pipeline.addLast("http-chunked", new ChunkedWriteHandler());
+        pipeline.addLast(new WebSocketServerCompressionHandler());
+        pipeline.addLast(new HttpObjectAggregator(1024));
+        pipeline.addLast(new WebSocketFrameAggregator(65536 * 10));
 
+        // 升级http到websocket握手 处理ping、pong、close
+        pipeline.addLast(new WebSocketServerProtocolSupportHandshake(WEBSOCKET_PATH, 65536 * 10));
+        pipeline.addLast(new IdleStateHandler(10, 10, 10));
+        //和握手有先后顺序
+        pipeline.addLast(new WebSocketIndexPageHandler(WEBSOCKET_PATH));
+        pipeline.addLast(new WebSocketFrameHandler());
+    }
 }
