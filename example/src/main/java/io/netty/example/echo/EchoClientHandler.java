@@ -19,8 +19,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.util.concurrent.Future;
-import io.netty.util.concurrent.GenericFutureListener;
+import io.netty.util.ReferenceCountUtil;
 
 import java.nio.charset.Charset;
 
@@ -29,6 +28,8 @@ import java.nio.charset.Charset;
  * traffic between the echo client and server by sending the first message to
  * the server.
  */
+
+//SimpleChannelInboundHandler 建议使用这个类，自动释放
 public class EchoClientHandler extends ChannelInboundHandlerAdapter {
 
     private final ByteBuf firstMessage;
@@ -39,22 +40,44 @@ public class EchoClientHandler extends ChannelInboundHandlerAdapter {
      * Creates a client-side handler.
      */
     public EchoClientHandler() {
+        //直接内存？内存泄露？
         firstMessage = Unpooled.directBuffer();
         firstMessage.writeCharSequence(HELL_WORLD, Charset.defaultCharset());
     }
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) {
-        ctx.writeAndFlush(firstMessage);
+    public void channelActive(ChannelHandlerContext ctx) throws InterruptedException {
+        System.out.println(firstMessage.refCnt());
+        while (true) {
+            //实现了资源释放？在哪里释放?
+            try {
+                firstMessage.retain();
+                //一定要加sync吗？
+                ctx.writeAndFlush(firstMessage).sync();
+            } catch (Exception e) {
+                if (firstMessage.refCnt() > 0) {
+                    ReferenceCountUtil.safeRelease(firstMessage);
+                }
+            }
+            System.out.println(firstMessage.refCnt());
+        }
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        ByteBuf byteBuf = (ByteBuf) msg;
-        CharSequence world = byteBuf.getCharSequence(0, HELL_WORLD.length(), Charset.defaultCharset());
-        if (world.equals("world")) {
-            return;
-        }
+//        ByteBuf byteBuf = (ByteBuf) msg;
+//        CharSequence world = byteBuf.getCharSequence(0, HELL_WORLD.length(), Charset.defaultCharset());
+//        if (world.equals("world")) {
+//            return;
+//        }
+//        String hello = "world";
+//        System.err.println("before write thread " + Thread.currentThread().getName());
+//        ctx.channel().write(msg).addListener(new GenericFutureListener<Future<? super Object>>() {
+//            @Override
+//            public void operationComplete(Future<? super Object> future) throws Exception {
+//                System.out.println(future.getNow());
+//            }
+//        });
     }
 
     @Override

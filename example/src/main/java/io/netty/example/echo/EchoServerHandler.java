@@ -19,22 +19,27 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.ReferenceCountUtil;
 
 import java.nio.charset.Charset;
 
 /**
  * Handler implementation for the echo server.
  */
+//实现该类会有什么问题？
 @Sharable
 public class EchoServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        //Msg 是什么类型？是直接内存吗？会不会滴露？怎么解决？注意什么？
+        //意味着内存泄露...
         ByteBuf byteBuf = (ByteBuf) msg;
-        String hello = byteBuf.getCharSequence(0,5, Charset.defaultCharset()).toString();
-        if (hello.equals("hello") || hello.equals("world")) {
-            ctx.write(msg);
-        }
+        String hello = byteBuf.getCharSequence(0, byteBuf.readableBytes(), Charset.defaultCharset()).toString();
+        System.out.println("Received: " + hello);
+        ReferenceCountUtil.safeRelease(msg);
+        // ctx.fireChannelRead(msg);//如果不调这个怎么办？
+        //实现SimpleChannelInboundHandler
     }
 
     @Override

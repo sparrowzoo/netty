@@ -15,20 +15,12 @@
  */
 package io.netty.channel;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
-import io.netty.util.Attribute;
-import io.netty.util.AttributeKey;
-import io.netty.util.DefaultAttributeMap;
-import io.netty.util.Recycler;
-import io.netty.util.ReferenceCountUtil;
-import io.netty.util.ResourceLeakHint;
+import io.netty.util.*;
 import io.netty.util.concurrent.EventExecutor;
 import io.netty.util.concurrent.OrderedEventExecutor;
-import io.netty.util.internal.PromiseNotificationUtil;
-import io.netty.util.internal.ThrowableUtil;
-import io.netty.util.internal.ObjectUtil;
-import io.netty.util.internal.StringUtil;
-import io.netty.util.internal.SystemPropertyUtil;
+import io.netty.util.internal.*;
 import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
 
@@ -798,16 +790,32 @@ abstract class AbstractChannelHandlerContext extends DefaultAttributeMap
     }
 
     private void invokeWriteAndFlush(Object msg, ChannelPromise promise) {
+
         if (invokeHandler()) {
             invokeWrite0(msg, promise);
+            if (msg instanceof ByteBuf) {
+                ByteBuf buf = (ByteBuf) msg;
+                if (buf.isDirect()) {
+                    System.out.println("HeadContext before write: " + msg + " isDirect: " + buf.isDirect() + " RefCnt: " + buf.refCnt());
+                }
+            }
             invokeFlush0();
+            if (msg instanceof ByteBuf) {
+                ByteBuf buf = (ByteBuf) msg;
+                if (buf.isDirect()) {
+                    System.out.println("HeadContext after write: " + msg + " isDirect: " + buf.isDirect() + " RefCnt: " + buf.refCnt());
+                }
+            }
         } else {
             writeAndFlush(msg, promise);
         }
     }
 
     private void write(Object msg, boolean flush, ChannelPromise promise) {
+        System.out.println("channel handler context name -->" + this.name);
         AbstractChannelHandlerContext next = findContextOutbound();
+        System.out.println("next channel handler context name -->" + next.name);
+
         final Object m = pipeline.touch(msg, next);
         EventExecutor executor = next.executor();
         if (executor.inEventLoop()) {

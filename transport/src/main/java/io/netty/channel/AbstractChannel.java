@@ -302,7 +302,6 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
     @Override
     public ChannelFuture writeAndFlush(Object msg) {
         logger.info("AbstractChannel of netty write and flush thread-name {}",Thread.currentThread().getName());
-
         return pipeline.writeAndFlush(msg);
     }
 
