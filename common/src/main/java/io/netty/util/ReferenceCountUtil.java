@@ -85,7 +85,9 @@ public final class ReferenceCountUtil {
      */
     public static boolean release(Object msg) {
         if (msg instanceof ReferenceCounted) {
-            return ((ReferenceCounted) msg).release();
+            ReferenceCounted referenceCounted = ((ReferenceCounted) msg);
+            System.out.println(msg.getClass() + "-->" + referenceCounted.refCnt());
+            return referenceCounted.release();
         }
         return false;
     }
@@ -200,5 +202,6 @@ public final class ReferenceCountUtil {
         }
     }
 
-    private ReferenceCountUtil() { }
+    private ReferenceCountUtil() {
+    }
 }

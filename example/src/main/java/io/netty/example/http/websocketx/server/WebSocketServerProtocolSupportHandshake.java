@@ -33,7 +33,7 @@ public class WebSocketServerProtocolSupportHandshake extends WebSocketServerProt
   @Override
   public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
     if (evt instanceof WebSocketServerProtocolHandler.HandshakeComplete) {
-      WebSocketServerProtocolHandler.HandshakeComplete serverHandshakeComplete = (WebSocketServerProtocolHandler.HandshakeComplete) evt;
+      //WebSocketServerProtocolHandler.HandshakeComplete serverHandshakeComplete = (WebSocketServerProtocolHandler.HandshakeComplete) evt;
       //String userId=serverHandshakeComplete.requestHeaders().get("sec-websocket-protocol");
      // System.out.println(serverHandshakeComplete.requestHeaders().get("sec-websocket-protocol"));
      // UserContainer.getContainer().online(ctx.channel(),userId);
