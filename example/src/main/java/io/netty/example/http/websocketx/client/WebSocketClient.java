@@ -147,6 +147,7 @@ public final class WebSocketClient {
                     ch.writeAndFlush(frame);
                 } else if ("while".equals(msg.toLowerCase())) {
                     while (true) {
+
                         Thread.sleep(10);//如果不sleep 会怎样？OOM?
                         ByteBuf byteBuf = ByteBufAllocator.DEFAULT.directBuffer(1024);
                         byteBuf.writeBytes("这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京".getBytes());
