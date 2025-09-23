@@ -38,7 +38,6 @@ import io.netty.util.concurrent.DefaultThreadFactory;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URI;
-import java.sql.Ref;
 
 /**
  * This is an example of a WebSocket client.
@@ -122,7 +121,6 @@ public final class WebSocketClient {
                                     handler, new SimpleChannelInboundHandler<String>() {
                                         @Override
                                         protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
-                                            //sendMsg(msg);
                                             System.out.printf(msg);
                                         }
                                     });
@@ -147,16 +145,33 @@ public final class WebSocketClient {
                 } else if ("ping".equals(msg.toLowerCase())) {
                     WebSocketFrame frame = new PingWebSocketFrame(Unpooled.wrappedBuffer(new byte[]{8, 1, 8, 1}));
                     ch.writeAndFlush(frame);
-                } else {
-//                    while (true) {
+                } else if ("while".equals(msg.toLowerCase())) {
+                    while (true) {
+
+                        Thread.sleep(10);//如果不sleep 会怎样？OOM?
                         ByteBuf byteBuf = ByteBufAllocator.DEFAULT.directBuffer(1024);
-                        //byteBuf.writeBytes(bytes);
-                        byteBuf.writeBytes("你好，我是客户端".getBytes());
-                        BinaryWebSocketFrame frame = new BinaryWebSocketFrame(byteBuf);
-                        byteBuf.resetReaderIndex();
-                        ch.writeAndFlush(frame);
-                        ReferenceCountUtil.release(byteBuf);
-//                    }
+                        byteBuf.writeBytes("这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京".getBytes());
+                        BinaryWebSocketFrame binaryWebSocketFrame = new BinaryWebSocketFrame(byteBuf);
+                        ch.writeAndFlush(binaryWebSocketFrame).sync();
+                        System.out.println(Thread.currentThread().getName() + "send ok!" + System.currentTimeMillis());
+//                                .addListener(future -> {
+//                            try {
+//                                if (!future.isSuccess()) {
+//                                    if (binaryWebSocketFrame.refCnt() > 0) { // 检查引用计数
+//                                        binaryWebSocketFrame.release();
+//                                    }
+//                                }
+//                            } finally {
+//                                //ReferenceCountUtil.safeRelease(binaryWebSocketFrame); // 最终安全释放
+//                                //ReferenceCountUtil.release(binaryWebSocketFrame); // 会抛异常，这里不需要手动释放HeadHandler在成功写入时会自动释放
+//                            }
+//                        });
+                    }
+                } else {
+                    ByteBuf byteBuf = ByteBufAllocator.DEFAULT.directBuffer(1024);
+                    byteBuf.writeBytes(msg.getBytes());
+                    BinaryWebSocketFrame binaryWebSocketFrame = new BinaryWebSocketFrame(byteBuf);
+                    ch.writeAndFlush(binaryWebSocketFrame).sync();
                 }
             }
         } finally {
