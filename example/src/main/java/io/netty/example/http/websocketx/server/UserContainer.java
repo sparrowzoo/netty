@@ -31,8 +31,8 @@ public class UserContainer {
     }
 
     public void online(Channel channel, String userId) {
-        channelMap.put(userId, channel);
-        channel.attr(USER_ID_KEY).set(userId);
+        //channelMap.put(userId, channel);
+        //channel.attr(USER_ID_KEY).set(userId);
     }
 
     public Channel getChannelByUserId(String userId) {

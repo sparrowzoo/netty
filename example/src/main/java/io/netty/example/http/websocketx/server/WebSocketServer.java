@@ -28,12 +28,12 @@ import io.netty.handler.ssl.util.SelfSignedCertificate;
 
 /**
  * A HTTP server which serves Web Socket requests at:
- *
+ * <p>
  * http://localhost:8080/websocket
- *
+ * <p>
  * Open your browser at <a href="http://localhost:8080/">http://localhost:8080/</a>, then the demo page will be loaded
  * and a Web Socket connection will be made automatically.
- *
+ * <p>
  * This server illustrates support for the different web socket specification versions and will work with:
  *
  * <ul>
@@ -44,11 +44,14 @@ import io.netty.handler.ssl.util.SelfSignedCertificate;
  * <li>Firefox 7+ (draft-ietf-hybi-thewebsocketprotocol-10)
  * <li>Firefox 11+ (RFC 6455 aka draft-ietf-hybi-thewebsocketprotocol-17)
  * </ul>
+ * <p>
+ * <p>
+ * -Xmx10m -Xms10m -XX:+UseG1GC -XX:+PrintGCDetails -Dio.netty.noPreferDirect=false
  */
 public final class WebSocketServer {
 
     static final boolean SSL = System.getProperty("ssl") != null;
-    static final int PORT = Integer.parseInt(System.getProperty("port", SSL? "8443" : "8080"));
+    static final int PORT = Integer.parseInt(System.getProperty("port", SSL ? "8443" : "8080"));
 
     public static void main(String[] args) throws Exception {
         /**
@@ -72,14 +75,14 @@ public final class WebSocketServer {
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
-             .channel(NioServerSocketChannel.class)
-             .handler(new LoggingHandler(LogLevel.INFO))
-             .childHandler(new WebSocketServerInitializer(sslCtx));
+                    .channel(NioServerSocketChannel.class)
+                    .handler(new LoggingHandler(LogLevel.INFO))
+                    .childHandler(new WebSocketServerInitializer(sslCtx));
 
             Channel ch = b.bind(PORT).sync().channel();
 
             System.out.println("Open your web browser and navigate to " +
-                    (SSL? "https" : "http") + "://127.0.0.1:" + PORT + '/');
+                    (SSL ? "https" : "http") + "://127.0.0.1:" + PORT + '/');
 
             ch.closeFuture().sync();
         } finally {

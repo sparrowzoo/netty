@@ -1296,6 +1296,7 @@ public class DefaultChannelPipeline implements ChannelPipeline {
 
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+            System.out.println("TailContext channelRead: " + msg);
             onUnhandledInboundMessage(msg);
         }
 
