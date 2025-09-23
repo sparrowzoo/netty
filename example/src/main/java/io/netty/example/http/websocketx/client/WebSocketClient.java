@@ -148,12 +148,12 @@ public final class WebSocketClient {
                 } else if ("while".equals(msg.toLowerCase())) {
                     while (true) {
 
-//                        Thread.sleep(10);//如果不sleep 会怎样？OOM?
+                        Thread.sleep(10);//如果不sleep 会怎样？OOM?
                         //因为是异步释放，在未释放之前的内存会OOM
                         ByteBuf byteBuf = ByteBufAllocator.DEFAULT.directBuffer(1024);
                         byteBuf.writeBytes("这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京这里是北京".getBytes());
                         BinaryWebSocketFrame binaryWebSocketFrame = new BinaryWebSocketFrame(byteBuf);
-                        ch.writeAndFlush(binaryWebSocketFrame)
+                        ch.writeAndFlush(binaryWebSocketFrame);
                                 //.sync();
                         System.out.println(Thread.currentThread().getName() + "send ok!" + System.currentTimeMillis());
 //                                .addListener(future -> {
