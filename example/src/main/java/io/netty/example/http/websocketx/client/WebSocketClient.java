@@ -16,6 +16,8 @@
 package io.netty.example.http.websocketx.client;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -25,21 +27,18 @@ import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.HttpClientCodec;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpObjectAggregator;
-import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
-import io.netty.handler.codec.http.websocketx.WebSocketFrame;
-import io.netty.handler.codec.http.websocketx.WebSocketVersion;
+import io.netty.handler.codec.http.websocketx.*;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketClientCompressionHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.DefaultThreadFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.sql.Ref;
 
 /**
  * This is an example of a WebSocket client.
@@ -123,6 +122,7 @@ public final class WebSocketClient {
                                     handler, new SimpleChannelInboundHandler<String>() {
                                         @Override
                                         protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+                                            //sendMsg(msg);
                                             System.out.printf(msg);
                                         }
                                     });
@@ -148,9 +148,15 @@ public final class WebSocketClient {
                     WebSocketFrame frame = new PingWebSocketFrame(Unpooled.wrappedBuffer(new byte[]{8, 1, 8, 1}));
                     ch.writeAndFlush(frame);
                 } else {
-                    Thread.sleep(2000);
-                    WebSocketFrame frame = new TextWebSocketFrame(msg);
-                    ch.writeAndFlush(frame);
+//                    while (true) {
+                        ByteBuf byteBuf = ByteBufAllocator.DEFAULT.directBuffer(1024);
+                        //byteBuf.writeBytes(bytes);
+                        byteBuf.writeBytes("你好，我是客户端".getBytes());
+                        BinaryWebSocketFrame frame = new BinaryWebSocketFrame(byteBuf);
+                        byteBuf.resetReaderIndex();
+                        ch.writeAndFlush(frame);
+                        ReferenceCountUtil.release(byteBuf);
+//                    }
                 }
             }
         } finally {

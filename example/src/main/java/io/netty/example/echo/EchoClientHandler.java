@@ -55,14 +55,6 @@ public class EchoClientHandler extends ChannelInboundHandlerAdapter {
         if (world.equals("world")) {
             return;
         }
-        String hello = "world";
-        System.err.println("before write thread "+Thread.currentThread().getName());
-        ctx.write(msg).addListener(new GenericFutureListener<Future<? super Object>>() {
-            @Override
-            public void operationComplete(Future<? super Object> future) throws Exception {
-                System.out.println(future.getNow());
-            }
-        });
     }
 
     @Override
