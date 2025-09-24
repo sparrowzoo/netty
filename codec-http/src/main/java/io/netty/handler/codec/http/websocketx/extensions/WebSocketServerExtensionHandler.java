@@ -72,11 +72,13 @@ public class WebSocketServerExtensionHandler extends ChannelDuplexHandler {
                 String extensionsHeader = request.headers().getAsString(HttpHeaderNames.SEC_WEBSOCKET_EXTENSIONS);
 
                 if (extensionsHeader != null) {
+                    //请求头中包含扩展
                     List<WebSocketExtensionData> extensions =
                             WebSocketExtensionUtil.extractExtensions(extensionsHeader);
                     int rsv = 0;
 
                     for (WebSocketExtensionData extensionData : extensions) {
+                        // 服务器配置的扩展
                         Iterator<WebSocketServerExtensionHandshaker> extensionHandshakersIterator =
                                 extensionHandshakers.iterator();
                         WebSocketServerExtension validExtension = null;
@@ -84,6 +86,7 @@ public class WebSocketServerExtensionHandler extends ChannelDuplexHandler {
                         while (validExtension == null && extensionHandshakersIterator.hasNext()) {
                             WebSocketServerExtensionHandshaker extensionHandshaker =
                                     extensionHandshakersIterator.next();
+                            //根据请求头中的扩展数据进行握手，返回有效的扩展
                             validExtension = extensionHandshaker.handshakeExtension(extensionData);
                         }
 

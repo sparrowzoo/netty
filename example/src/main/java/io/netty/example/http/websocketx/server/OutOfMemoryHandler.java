@@ -62,7 +62,7 @@ public class OutOfMemoryHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof BinaryWebSocketFrame) {
             BinaryWebSocketFrame frame = (BinaryWebSocketFrame) msg;
-            System.out.println(frame.content().capacity());
+            System.out.println(BinaryUtils.toString(frame));
             ReferenceCountUtil.release(msg);
         }
     }

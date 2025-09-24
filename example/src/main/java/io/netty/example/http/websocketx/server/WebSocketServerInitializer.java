@@ -48,15 +48,15 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
 
         // ChunkedWriteHandler：向客户端发送大文件 如 html5文件
         //pipeline.addLast("http-chunked", new ChunkedWriteHandler());
-//        pipeline.addLast(new WebSocketServerCompressionHandler());
         pipeline.addLast(new HttpObjectAggregator(1024));
-
+        pipeline.addLast(new WebSocketServerCompressionHandler());
         // 升级http到websocket握手 处理ping、pong、close
-        pipeline.addLast(new WebSocketServerProtocolSupportHandshake(WEBSOCKET_PATH, 65536 * 10));
-        pipeline.addLast(new WebSocketFrameAggregator(65536 * 10));
-        //和握手有先后顺序
-        pipeline.addLast(new WebSocketIndexPageHandler(WEBSOCKET_PATH));
+        pipeline.addLast(new WebSocketServerProtocolSupportHandshake(WEBSOCKET_PATH, 1024));
+        pipeline.addLast(new WebSocketFrameAggregator(1024 * 10));
         pipeline.addLast(new IdleStateHandler(10, 10, 10));
+        //和握手有先后顺序
+        //如果握手之前，则会导致websocket 协议重级失败
+        pipeline.addLast(new WebSocketIndexPageHandler("/"));
         pipeline.addLast(new OutOfMemoryHandler());
         //pipeline.addLast(new WebSocketFrameHandler());
     }

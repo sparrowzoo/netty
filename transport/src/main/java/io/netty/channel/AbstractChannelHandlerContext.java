@@ -726,6 +726,7 @@ abstract class AbstractChannelHandlerContext extends DefaultAttributeMap
         }
     }
 
+    //实现执行handler 的write方法
     private void invokeWrite0(Object msg, ChannelPromise promise) {
         try {
             ((ChannelOutboundHandler) handler()).write(this, msg, promise);
@@ -784,6 +785,7 @@ abstract class AbstractChannelHandlerContext extends DefaultAttributeMap
             return promise;
         }
 
+        //执行写逻辑，并flush=true
         write(msg, true, promise);
 
         return promise;
@@ -820,6 +822,7 @@ abstract class AbstractChannelHandlerContext extends DefaultAttributeMap
         EventExecutor executor = next.executor();
         if (executor.inEventLoop()) {
             if (flush) {
+                //执行下一个handler的write flush方法
                 next.invokeWriteAndFlush(m, promise);
             } else {
                 next.invokeWrite(m, promise);
